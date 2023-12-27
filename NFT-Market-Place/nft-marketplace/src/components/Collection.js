@@ -3,7 +3,6 @@ import {ethers} from 'ethers';
 import { Row, Col, Card, Button, Form } from 'react-bootstrap'
 import { create as ipfsHttpClient } from 'ipfs-http-client'
 const client = ipfsHttpClient('https://ipfs.infura.io:5001/api/v0')
-
 const {utils} = 'ethers';
 
 function renderSoldItems(items) {
@@ -27,83 +26,75 @@ function renderSoldItems(items) {
 }
 const Collection = ({ marketplace, axICToken, account }) => {
   const [loading, setLoading] = useState(true)
-  const [items, setItems] = useState([])
-  const [solds, setSolds] = useState(false)
-
-  const loadListedItems = async () => {
-    // Load all sold items that the user listed
-    const itemCount = await marketplace.itemCount
-    let listItems = []
-    let soldItems = []
-    for (let index = 1; index <= itemCount; index++) {
-      const i = await marketplace.items(index)
-      if (i.seller.toLowerCase() === account) {
-        // get uri url from nft contract
-        const uri = await axICToken.tokenURI(i.tokenId)
-        // use uri to fetch the nft metadata stored on ipfs 
-        const response = await fetch(uri)
-        const metadata = await response.json()
-        // get total price of item (item price + fee)
-        const totalPrice = await marketplace.getTotalPrice(i.itemId)
-        // define listed item object
-        let item = {
-          totalPrice,
-          price: i.price,
-          itemId: i.itemId,
-          name: metadata.name,
-          description: metadata.description,
-          image: metadata.image
-        }
-        listItems.push(item)
-        // Add listed item to sold items array if sold
-        if (i.sold) soldItems.push(item)
+  const [listAxies, setListAxies] = useState([])
+  const loadUserCollection = async () => {
+    // Get all token account have  
+    const tokens = await axICToken.getAllToken(account);
+    // console.log(tokens);
+    let tempAxies = [];
+    tokens.forEach(async (a) => {
+      // get uri url from nft contract
+      const uri = await axICToken.tokenURI(a);
+      // use uri to fetch the nft metadata stored on ipfs 
+      const response = await fetch(uri);
+      const metadata = await response.json();
+      // console.log(metadata.image);
+      let imgURI = "https://ipfs.io/ipfs/" + metadata.image.slice(7);
+      //Define item
+      const axie = {
+        tokenId: a,
+        axieId: metadata.name,
+        image: imgURI
       }
-    }
+      // console.log(axie);
+      // Add item to items array
+      tempAxies.push(axie);
+      setListAxies(tempAxies);
+    });
     setLoading(false)
-    setItems(listItems)
-    setSolds(soldItems)
   }
-  const SellItem = async (item) => {
-    await (await marketplace.makeItem(item.itemId, item.price)).wait()
-    loadListedItems()
-  }
-    
-
     useEffect(() => {
-      loadListedItems()
+      loadUserCollection()
     }, [])
     if (loading) return (
       <main style={{ padding: "1rem 0" }}>
         <h2>Loading...</h2>
       </main>
     )
+    // return (
+    //   <div className="flex justify-center">
+    //   <h1>{axies.length}</h1>
+    //     {axies.length > 0 ?
+    //       axies.map((axie) => (
+    //       <div className="axieItem">
+    //         <div className="axieImg">
+    //         <h1></h1>
+    //           <img id="axieImg" src={axie.image} alt=''/>
+    //         </div>
+    //         <div className="axieInfo">
+    //           <h3 id="axieID">{axie.name}</h3>
+    //         </div>
+    //         <Button className="buy-sellBtn" onClick="" variant="outline-light">Sell</Button>
+    //       </div>
+    //     )) : (
+    //       <main style={{ padding: "1rem 0" }}>
+    //           <h2>No listed assets</h2>
+    //       </main>
+    //     )}
+    //   </div>
+    // );
     return (
       <div className="flex justify-center">
-        {items.length > 0 ?
-          <div className="px-5 py-3 container">
-              <h2>Listed</h2>
-            <Row xs={1} md={2} lg={4} className="g-4 py-3">
-              {items.map((item, idx) => (
-                <Col key={idx} className="overflow-hidden">
-                  <Card>
-                    <Card.Img variant="top" src={item.image} />
-                    <Card.Footer>{utils.formatEther(item.totalPrice)} ETH</Card.Footer>
-                    <div className='d-grid'>
-                        <Button onClick={() => SellItem(item)} variant="primary" size="lg">
-                          Sale {ethers.formatEther(item.totalPrice)} ETH
-                        </Button>
-                      </div>
-                  </Card>
-                </Col>
-              ))}
-            </Row>
-              {solds.length > 0 && renderSoldItems(solds)}
+      <div>
+      <h1>{listAxies.length}</h1>
+        {listAxies.map(axie=> (
+          <div key={axie.tokenId}> 
+            <img src={axie.image}></img>
+            <h1>{axie.axieId}</h1>
+            <h2>{axie.tokenId}</h2>
           </div>
-          : (
-            <main style={{ padding: "1rem 0" }}>
-              <h2>No listed assets</h2>
-            </main>
-          )}
+        ))}
+      </div>
       </div>
     );
   }
