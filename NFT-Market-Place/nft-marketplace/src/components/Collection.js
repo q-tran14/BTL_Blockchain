@@ -28,11 +28,14 @@ const Collection = ({ marketplace, axICToken, account }) => {
   const [loading, setLoading] = useState(true)
   const [listAxies, setListAxies] = useState([])
   const loadUserCollection = async () => {
+    // axICToken.balanceOf(account); => 6 check equal getAllToken length
+    
     // Get all token account have  
     const tokens = await axICToken.getAllToken(account);
     // console.log(tokens);
     let tempAxies = [];
     tokens.forEach(async (a) => {
+      
       // get uri url from nft contract
       const uri = await axICToken.tokenURI(a);
       // use uri to fetch the nft metadata stored on ipfs 
@@ -46,7 +49,7 @@ const Collection = ({ marketplace, axICToken, account }) => {
         axieId: metadata.name,
         image: imgURI
       }
-      // console.log(axie);
+      console.log(axie);
       // Add item to items array
       tempAxies.push(axie);
       setListAxies(tempAxies);
