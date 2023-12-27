@@ -48,7 +48,6 @@
 .body-page{
   width: 100%;
   height: 100%;
-  margin-left: 63.5px;
   flex-shrink: 0;
   border-radius: 0px 0px 250px 250px;
   background: linear-gradient(180deg,#631212 0%,#4d0e0e 100%);

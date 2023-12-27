@@ -4,6 +4,7 @@ import {
 import {Navbar, Nav, Button, Container } from 'react-bootstrap'
 import icon from '../../src/images/Marketplace-icon.png';
 import '../css/Navbar.css';
+<script></script>
 
 const Navigation = ({ web3Handler, account }) => {
 
@@ -11,13 +12,12 @@ const Navigation = ({ web3Handler, account }) => {
         <><Navbar expand="lg" className="justify-content-center">
             <Container className="font-face-changa-one">
                 <img src={icon} width="40" height="40" className="" alt="" />
-                <Navbar.Brand href="#home" to="/Marketplace">NFT Marketplace</Navbar.Brand>
+                <Navbar.Brand href="#action/3.1" as={Link} to="/Marketplace">Axie Marketplace</Navbar.Brand>
 
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="me-auto">
                         <Nav.Link href="#action/3.1" as={Link} to="/Marketplace">Marketplace</Nav.Link>
                         <Nav.Link href="#action/3.1" as={Link} to="/Collection">Collection</Nav.Link>
-                        <Nav.Link href="#action/3.1" as={Link} to="/OnShelf">OnShelf</Nav.Link>
                         {account ? (
                                 <Nav.Link
                                     href={`https://etherscan.io/address/${account}`}

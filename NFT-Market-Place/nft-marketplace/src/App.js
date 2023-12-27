@@ -4,12 +4,11 @@ import {BrowserRouter, Routes, Route} from 'react-router-dom';
 import Navigation from './components/NavigationBar.js';
 import Marketplace from './components/Marketplace.js';
 import Collection from './components/Collection.js';
-import OnShelf from './components/OnShelf.js';
-import HomePage from './components/HomePage.js';
 import { Spinner } from 'react-bootstrap';
 import '../src/css/App.css'
 import marketplaceAbi from '../src/SmartContract/build/contracts/Marketplace.json';
 import axICTokenAbi from '../src/SmartContract/build/contracts/AxICToken.json';
+
 
 function App() {
   const [account, setAccount] = useState(null);
@@ -51,32 +50,32 @@ function App() {
     // Get account balance
     const balance = await signer.balance;
     setBalance(balance);
-
     // Load smart contract
     loadContracts(signer);
   }
-
   return (
       <BrowserRouter>
         <div className='bg-full'>
           <Navigation web3Handler={web3Handler} account={account}/>
           <div className="flex justify-center body-page">
-            {loading ? (
-            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '80vh' }}>
-              <Spinner animation="border" style={{ display: 'flex' }} />
-              <p className='mx-3 my-0'>Awaiting Metamask Connection...</p>
-            </div>
-          ) : (
-         <><Routes>
-                <Route path="/Marketplace" element={<Marketplace marketplace={marketplace} axICToken={axICToken} account={account} />} />
-                <Route path="/Collection" element={<Collection marketplace={marketplace} axICToken={axICToken} account={account} />} />
-                <Route path="/OnShelf" element={<OnShelf marketplace={marketplace} axICToken={axICToken} account={account} />} />
-              </Routes></>
-          )}
+            {loading ? 
+            (
+                  <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '80vh' }}>
+                    <Spinner animation="border" style={{ display: 'flex' }} />
+                    <p className='mx-3 my-0'>Awaiting Metamask Connection...</p>
+                  </div>
+                ) : (
+              <><Routes>
+                      <Route path="/Marketplace" element={<Marketplace marketplace={marketplace} axICToken={axICToken} />} />
+                      <Route path="/Collection" element={<Collection marketplace={marketplace} axICToken={axICToken} account={account} />} />
+
+                  </Routes>
+              </>
+            )
+           }
           </div>
         </div>
       </BrowserRouter>
-      
   );
 }
 
