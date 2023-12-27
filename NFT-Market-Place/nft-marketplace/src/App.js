@@ -12,7 +12,7 @@ import axICTokenAbi from '../src/SmartContract/build/contracts/AxICToken.json';
 
 function App() {
   const [account, setAccount] = useState(null);
-  const [loading, setLoading] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [balance, setBalance] = useState('');
   const [axICToken, setAxICToken] = useState({});
   const [marketplace, setMarketplace] = useState({});
@@ -62,13 +62,12 @@ function App() {
             (
                   <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '80vh' }}>
                     <Spinner animation="border" style={{ display: 'flex' }} />
-                    <p className='mx-3 my-0'>Awaiting Metamask Connection...</p>
+                    <p className='mx-3 my-0'>Waiting Metamask Connection...</p>
                   </div>
                 ) : (
               <><Routes>
                       <Route path="/Marketplace" element={<Marketplace marketplace={marketplace} axICToken={axICToken} />} />
                       <Route path="/Collection" element={<Collection marketplace={marketplace} axICToken={axICToken} account={account} />} />
-
                   </Routes>
               </>
             )
