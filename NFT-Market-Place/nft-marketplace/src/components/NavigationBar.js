@@ -9,13 +9,13 @@ import '../css/Navbar.css';
 const Navigation = ({ web3Handler, account }) => {
 
     return (
-        <><Navbar expand="lg" className="justify-content-center">
+        <Navbar expand="lg" className="bg-img">
             <Container className="font-face-changa-one">
                 <img src={icon} width="40" height="40" className="" alt="" />
                 <Navbar.Brand href="#action/3.1" as={Link} to="/Marketplace">Axie Marketplace</Navbar.Brand>
 
                 <Navbar.Collapse id="basic-navbar-nav">
-                    <Nav className="me-auto">
+                    <Nav className="me-auto center-navbar">
                         <Nav.Link href="#action/3.1" as={Link} to="/Marketplace">Marketplace</Nav.Link>
                         <Nav.Link href="#action/3.1" as={Link} to="/Collection">Collection</Nav.Link>
                         {account ? (
@@ -36,7 +36,7 @@ const Navigation = ({ web3Handler, account }) => {
                     </Nav>
                 </Navbar.Collapse>
             </Container>
-        </Navbar></>
+        </Navbar>
     )
 }
 export default Navigation;

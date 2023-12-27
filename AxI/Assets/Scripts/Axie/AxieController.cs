@@ -32,7 +32,7 @@ public class AxieController : MonoBehaviour
     void Start()
     {
         float hp = Random.Range(300,501);
-        float dmg = Random.Range(10,81);
+        float dmg = Random.Range(10,51);
         data = new AxieData(hp, dmg);
 
         previousState = "";
@@ -43,6 +43,9 @@ public class AxieController : MonoBehaviour
         gameObject.AddComponent<Rigidbody2D>();
         gameObject.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezePositionY | RigidbodyConstraints2D.FreezeRotation;
         move = true;
+
+        GameObject ui = GameObject.Find("UIController");
+        ui.GetComponent<BattleUIController>().SetUpHealthBar(gameObject);
     }
 
     // Update is called once per frame

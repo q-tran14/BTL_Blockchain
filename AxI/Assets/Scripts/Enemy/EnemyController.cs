@@ -32,13 +32,14 @@ public class EnemyController : MonoBehaviour
     public bool move = false;
     public float speed;
 
-    void Start()
+    void Awake()
     {
         float hp = Random.Range(300, 501);
-        float dmg = Random.Range(10, 151);
+        float dmg = Random.Range(10, 101);
         enemy = new Enemy(hp, dmg);
 
         eneAniActive = eneAniList[Random.Range(0, eneAniList.Count)];
+        eneAniActive.gameObject.tag = "Enemy"; 
         eneAniActive.gameObject.SetActive(true);
 
         previousState = "";
@@ -109,10 +110,10 @@ public class EnemyController : MonoBehaviour
     {
         Debug.Log("Enemy died");
         eneAniActive.state.SetAnimation(0, "action/idle/normal", false);
-        eneAniActive.GetComponent<MeshRenderer>().materials[0].SetColor("dark", new Color(82, 69, 69, 255)); ;
+        eneAniActive.GetComponent<MeshRenderer>().materials[0].SetColor("Tint", new Color(82, 69, 69, 255)); ;
 
         GameObject.Find("Game Manager").GetComponent<GameManager>().Won();
-        Destroy(gameObject, 10);
+        Destroy(gameObject, 100);
     }
 }
 

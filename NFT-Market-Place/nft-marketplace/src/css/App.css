@@ -39,18 +39,18 @@
 }
 
 .bg-full{
-  min-width:100%;
+  width:100%;
   height: 100%;
   background-image: url('../images/Background.png');
-  background-size:cover;
+  background-size: cover;
 }
 
 .body-page{
   width: 100%;
   height: 100%;
-  flex-shrink: 0;
   border-radius: 0px 0px 250px 250px;
   background: linear-gradient(180deg,#631212 0%,#4d0e0e 100%);
+  background-size:cover;
 }
 
 h2 {

@@ -11,7 +11,7 @@
     margin-left: 33%;
 }
 
-#responsive-navbar-nav{
+#basic-navbar-nav{
     padding-top: 20px;
 }
 
@@ -20,6 +20,7 @@ a{
     margin-right: 100px;
     margin-left: 0px;
     color:white;
+    font-weight: 1;
 }
 
 a:visited{

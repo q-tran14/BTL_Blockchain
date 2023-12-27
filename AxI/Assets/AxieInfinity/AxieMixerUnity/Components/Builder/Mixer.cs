@@ -79,9 +79,10 @@ namespace AxieMixer.Unity
             string genesStuffJsonString = Resources.Load<TextAsset>($"{StuffName}/axie-2d-v3-stuff-genes").text;
             string stuffSamplesJsonString = Resources.Load<TextAsset>($"{StuffName}/axie-2d-v3-stuff-samples").text;
             string stuffAnimationsJsonString = Resources.Load<TextAsset>($"{StuffName}/axie-2d-v3-stuff-animations").text;
-            string stuffMaterialsString = Resources.Load<TextAsset>($"{StuffName}/axie-2d-v3-stuff-materials").text;
+            string stuffMaterialsString = Resources.Load<TextAsset>("axie-2d-v3-stuff/axie-2d-v3-stuff-materials").text;
 
             var baseMaterials = LoadAxieMaterials(stuffMaterialsString);
+            Debug.Log("Base Materials:" + baseMaterials.Count);
             var atlasStuffMap = LoadAxieAtlasStuff();
 
             atlasStuffMap.TryGetValue("atlas-single", out var singleAtlasAsset);

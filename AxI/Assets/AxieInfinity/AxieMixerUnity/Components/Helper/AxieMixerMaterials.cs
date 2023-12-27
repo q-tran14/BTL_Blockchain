@@ -69,6 +69,7 @@ namespace AxieMixer.Unity {
             )
         {
             UnityEngine.Assertions.Assert.IsNotNull(atlasStuffSingle);
+            Debug.Log("Base Materials contain key \"default\": " + baseMaterials.ContainsKey("default"));
             UnityEngine.Assertions.Assert.IsTrue(baseMaterials.ContainsKey("default"));
 
             List<SplatAtlasStuff> atlasStuffs = new List<SplatAtlasStuff>();

@@ -31,12 +31,15 @@
             else
             {
                 LInstance = this;
-                Mixer.Init();
                 DontDestroyOnLoad(this);
             }
         }
+        private void OnEnable()
+        {
+            Mixer.Init();
+        }
 
-        void ProcessMixer(string axieId, string genesStr, bool isGraphic, bool giftUse, int order)   //Lụm
+    void ProcessMixer(string axieId, string genesStr, bool isGraphic, bool giftUse, int order)   //Lụm
         {
             if (string.IsNullOrEmpty(genesStr))
             {

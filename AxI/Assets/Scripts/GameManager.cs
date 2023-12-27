@@ -8,7 +8,7 @@ public class GameManager : MonoBehaviour
 {
     public BattleUIController ui;
     // Start is called before the first frame update
-    void Start()
+    async void Awake()
     {
         StartCoroutine(LevelManager.LInstance.GetAxiesGenes(LevelManager.LInstance.axieSelect, false, false, 0));
     }

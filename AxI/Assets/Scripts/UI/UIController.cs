@@ -50,7 +50,7 @@ public class UIController : MonoBehaviour
 
     private void Start()
     {
-        player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
+        player = GameObject.Find("Player").GetComponent<Player>();
         addressPlayer.text = player.getPlayerAccout().Substring(0, 7) + "..." + player.getPlayerAccout().Substring(player.getPlayerAccout().Length - 5, 5);
         UpdateUI();
         if (player.getTotalAxies() == 0) notice.SetActive(true);
@@ -141,12 +141,17 @@ public class UIController : MonoBehaviour
         {
             foreach (var f in Directory.GetFiles(Application.persistentDataPath))
             {
-                FileInfo i = new FileInfo(f);
-                i.Delete();
+                if (!Path.GetFileName(f).Contains("Player"))
+                {
+                    Debug.Log("Delete: " + f);
+                    FileInfo i = new FileInfo(f);
+                    i.Delete();
+                }
             }
         }
         Debug.Log("Exit");
         #if !UNITY_EDITOR
+            Debug.Log("Quit");
             Application.Quit();
         #else
             EditorApplication.ExitPlaymode();
