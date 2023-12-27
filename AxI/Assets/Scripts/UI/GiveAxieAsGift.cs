@@ -54,7 +54,7 @@ public class GiveAxieAsGift : MonoBehaviour
         string[] args = { PlayerPrefs.GetString("Account"), uri };
         string response = await ContractManager.CInstance.SendTransaction("safeMint", args);
         Debug.Log(response);
-        Player player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
+        Player player = GameObject.FindGameObjectWithTag("PlayerUser").GetComponent<Player>();
         player.addAxie(axieId.ToString());
         GameObject.Find("UIController").GetComponent<UIController>().UpdateUI();
         GameObject.Find("UIController").GetComponent<UIController>().updateList(axieId.ToString());

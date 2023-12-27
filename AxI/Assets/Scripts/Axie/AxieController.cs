@@ -1,3 +1,4 @@
+using MongoDB.Driver;
 using Spine.Unity;
 using System.Collections;
 using System.Collections.Generic;
@@ -28,11 +29,16 @@ public class AxieController : MonoBehaviour
     public bool collisionEnemy;
     public bool move = false;
     public float speed = 2;
+    public HealthBar enemyHealth;
+
+    public float countDown;
+    public bool canCount;
+    public GameObject enemyObj;
     // Start is called before the first frame update
     void Start()
     {
-        float hp = Random.Range(300,501);
-        float dmg = Random.Range(10,51);
+        float hp = 500;
+        float dmg = 300;
         data = new AxieData(hp, dmg);
 
         previousState = "";
@@ -44,6 +50,7 @@ public class AxieController : MonoBehaviour
         gameObject.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezePositionY | RigidbodyConstraints2D.FreezeRotation;
         move = true;
 
+        // Set up health Bar for axie
         GameObject ui = GameObject.Find("UIController");
         ui.GetComponent<BattleUIController>().SetUpHealthBar(gameObject);
     }
@@ -58,10 +65,24 @@ public class AxieController : MonoBehaviour
                 changeState("action/move-forward");
                 gameObject.transform.position += transform.right * speed * Time.deltaTime;
             }
-            else if (move == false)
+        }
+        if (data.hp <= 0)
+        {
+            changeState("action/idle/normal");
+            Die();
+        }
+        //Bug
+        if (collisionEnemy == true && canCount == true && enemyObj != null) { 
+            countDown += 0.001f;
+            if (countDown >= axieSke.state.GetCurrent(0).AnimationEnd)
             {
-                Debug.Log("Run");
-                changeState("action/idle/normal");
+                if (enemyObj.GetComponent<EnemyController>().enemy.HP > 0)
+                {
+                    enemyObj.GetComponent<EnemyController>().enemy.HP -= data.dmg;
+                    enemyHealth.OnHPChange(data.dmg);
+                    Debug.Log("Enemy HP: -" + data.dmg);
+                    countDown = 0;
+                }
             }
         }
     }
@@ -80,11 +101,15 @@ public class AxieController : MonoBehaviour
     void OnCollisionEnter2D(Collision2D collision)
     {
         Debug.Log("Enter enemy");
-        
+        enemyHealth = GameObject.Find("Enemy Health Bar").GetComponent<HealthBar>();
         string[] type = {"mouth-bite","horn-gore","multi-attack","normal-attack" };
         int i = Random.Range(0, type.Length);
-        if (collision.collider.tag == "Enemy" && collision.collider.transform.parent.GetComponent<EnemyController>().enemy.HP > 0)
+        if (collision.collider.tag == "Enemy" && collision.collider.GetComponent<EnemyController>().enemy.HP > 0)
         {
+            //Bug
+            countDown = 0;
+            canCount = true;
+            //
             collisionEnemy = true;
             changeState("attack/melee/" + type[i]);
         }
@@ -93,18 +118,33 @@ public class AxieController : MonoBehaviour
     private void OnCollisionStay2D(Collision2D collision)
     {
         Debug.Log("Enter collision on stay enemy");
-        if (collision.collider.tag == "Enemy" && collision.collider.transform.parent.GetComponent<EnemyController>().enemy.HP > 0)
+        if (collision.collider.tag == "Enemy" && collision.collider.GetComponent<EnemyController>().enemy.HP > 0)
         {
-            if (axieSke.state.GetCurrent(0).IsComplete == true)
-            {
-                if (collision.collider.transform.parent.GetComponent<EnemyController>().enemy.HP - data.dmg > 0) collision.collider.transform.parent.GetComponent<EnemyController>().enemy.HP -= data.dmg;
-                else {
-                    collisionEnemy = false;
-                    move = false;
-                    collision.collider.transform.parent.GetComponent<EnemyController>().Die();
-                }
-            }
+            Debug.Log("Start fight with enemy");
+            StartFighting(collision.gameObject);
+            ////Bug
+            //Debug.Log(canCount);
+            //if (countDown >= axieSke.state.GetCurrent(0).AnimationEnd + 2)
+            //{
+            //    //Bug
+            //    canCount = false;
+            //    countDown = 0;
+            //    //
+            //    if (collision.collider.GetComponent<EnemyController>().enemy.HP - data.dmg > 0) {
+            //        collision.collider.GetComponent<EnemyController>().enemy.HP -= data.dmg;
+            //        enemyHealth.OnHPChange(data.dmg);
+            //        Debug.Log("Enemy HP: -" + data.dmg);
+            //    }
+            //}
+            ////Bug
+            //canCount = true;
         }
+    }
+
+    public void OnCollisionExit2D(Collision2D collision)
+    {
+        collisionEnemy = false;
+        StartFighting(null);
     }
 
     public void Die()
@@ -114,5 +154,10 @@ public class AxieController : MonoBehaviour
 
         GameObject.Find("Game Manager").GetComponent<GameManager>().Lose();
         Destroy(gameObject, 10);
+    }
+
+    public void StartFighting(GameObject ene)
+    {
+        enemyObj = ene;
     }
 }

@@ -26,28 +26,26 @@ public class EnemyController : MonoBehaviour
     public Enemy enemy;
     public string currentState;
     public string previousState;
-    public List<SkeletonAnimation> eneAniList;
-    public SkeletonAnimation eneAniActive;
+    public SkeletonAnimation eneAni;
     public bool collisionPlayer = false;
     public bool move = false;
-    public float speed;
-
-    void Awake()
+    public float speed = 2;
+    public HealthBar axieHealth;
+    void OnEnable()
     {
-        float hp = Random.Range(300, 501);
-        float dmg = Random.Range(10, 101);
+        float hp = 500;
+        float dmg = 20;
         enemy = new Enemy(hp, dmg);
-
-        eneAniActive = eneAniList[Random.Range(0, eneAniList.Count)];
-        eneAniActive.gameObject.tag = "Enemy"; 
-        eneAniActive.gameObject.SetActive(true);
 
         previousState = "";
         currentState = "action/idle/normal";
-        eneAniActive.GetComponent<SkeletonAnimation>().state.SetAnimation(0, currentState, true);
+        eneAni.state.SetAnimation(0, currentState, true);
         move = true;
     }
-
+    public void SetEneAni(SkeletonAnimation ene)
+    {
+        eneAni = ene;
+    }
     // Update is called once per frame
     void Update()
     {
@@ -58,11 +56,11 @@ public class EnemyController : MonoBehaviour
                 changeState("action/move-forward");
                 gameObject.transform.position -= transform.right * speed * Time.deltaTime;
             }
-            else if (move == false)
-            {
-                Debug.Log("Run");
-                changeState("action/idle/normal");
-            }
+        }
+        if (enemy.HP <= 0)
+        {
+            changeState("action/idle/normal");
+            Die();
         }
     }
 
@@ -73,35 +71,35 @@ public class EnemyController : MonoBehaviour
             Debug.Log(newState + "  :  " + currentState);
             previousState = currentState;
             currentState = newState;
-            eneAniActive.state.SetAnimation(0, currentState, true);
+            eneAni.state.SetAnimation(0, currentState, true);
         }
         
     }
     void OnCollisionEnter2D(Collision2D collision)
     {
         Debug.Log("Enter player");
-        
-        if (collision.collider.tag == "Player" && collision.collider.GetComponent<AxieController>().data.hp > 0)
+        axieHealth = GameObject.Find("Axie Health Bar").GetComponent<HealthBar>();
+        if (collision.collider.transform.gameObject.tag == "Player" && collision.collider.GetComponent<AxieController>().data.hp > 0)
         {
+            Debug.Log(collision.collider.tag);
             collisionPlayer = true;
-            changeState("attack/melee/normal-melee");
+            changeState("attack/melee/normal-attack");
         }
     }
 
     private void OnCollisionStay2D(Collision2D collision)
     {
         Debug.Log("Enter on collision stay player");
-        if (collision.collider.tag == "Player" && collision.collider.GetComponent<AxieController>().data.hp > 0)
+        if (collision.collider.transform.gameObject.tag == "Player" && collision.collider.GetComponent<AxieController>().data.hp > 0)
         {
-            if (eneAniActive.state.GetCurrent(0).IsComplete == true)
+            Debug.Log("Start fight with axie");
+            if (eneAni.state.GetCurrent(0).IsComplete == true)
             {
-                if (collision.collider.GetComponent<AxieController>().data.hp - enemy.dmg > 0) collision.collider.gameObject.GetComponent<AxieController>().data.hp -= enemy.dmg;
-                else
-                {
-                    collisionPlayer = false;
-                    move = false;
-                    collision.collider.gameObject.GetComponent<AxieController>().Die();
-                }
+                if (collision.collider.GetComponent<AxieController>().data.hp - enemy.dmg > 0) {
+                    collision.collider.gameObject.GetComponent<AxieController>().data.hp -= enemy.dmg;
+                    axieHealth.OnHPChange(enemy.dmg);
+                    Debug.Log("Axie HP: -" + enemy.dmg);
+                } 
             }
         }
     }
@@ -109,8 +107,8 @@ public class EnemyController : MonoBehaviour
     public void Die()
     {
         Debug.Log("Enemy died");
-        eneAniActive.state.SetAnimation(0, "action/idle/normal", false);
-        eneAniActive.GetComponent<MeshRenderer>().materials[0].SetColor("Tint", new Color(82, 69, 69, 255)); ;
+        eneAni.state.SetAnimation(0, "action/idle/normal", false);
+        eneAni.GetComponent<MeshRenderer>().materials[0].SetColor("Tint", new Color(82, 69, 69, 255)); ;
 
         GameObject.Find("Game Manager").GetComponent<GameManager>().Won();
         Destroy(gameObject, 100);

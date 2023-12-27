@@ -1621,7 +1621,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1238099962}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 2146317658}
+        m_TargetAssemblyTypeName: BattleUIController, Assembly-CSharp
+        m_MethodName: ReturnHome
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1238099962
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2142,7 +2154,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1883716930}
-  - component: {fileID: 1883716931}
+  - component: {fileID: 1883716932}
   m_Layer: 0
   m_Name: Chimeras
   m_TagString: Untagged
@@ -2171,7 +2183,7 @@ Transform:
   - {fileID: 1166593093}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1883716931
+--- !u!114 &1883716932
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2180,14 +2192,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 1883716929}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0f8c7aa0e9b9c344e925b01c40b91206, type: 3}
+  m_Script: {fileID: 11500000, guid: d2d61b003a20bd8449eb94d13c35b961, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemy:
-    HP: 0
-    dmg: 0
-  currentState: 
-  previousState: 
   eneAniList:
   - {fileID: 2039274367}
   - {fileID: 1625901512}
@@ -2196,9 +2203,6 @@ MonoBehaviour:
   - {fileID: 395312636}
   - {fileID: 1166593094}
   eneAniActive: {fileID: 0}
-  collisionPlayer: 0
-  move: 0
-  speed: 2
 --- !u!1 &1887978936
 GameObject:
   m_ObjectHideFlags: 0

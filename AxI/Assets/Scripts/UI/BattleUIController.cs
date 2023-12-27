@@ -20,7 +20,7 @@ public class BattleUIController : MonoBehaviour
     {
         GameObject ene = GameObject.FindGameObjectWithTag("Enemy");
         
-        float eneHp = ene.transform.parent.gameObject.GetComponent<EnemyController>().enemy.HP;
+        float eneHp = ene.GetComponent<EnemyController>().enemy.HP;
         Debug.Log(eneHp);
         eneHealthBar.GetComponent<HealthBar>().SetUp(ene, eneHp);
         eneHealthBar.SetActive(true);
@@ -28,7 +28,6 @@ public class BattleUIController : MonoBehaviour
 
     public void SetUpHealthBar(GameObject axie)
     {
-        Debug.Log(axie == null);
         float axieHp = axie.GetComponent<AxieController>().data.hp;
         axieHealthBar.GetComponent<HealthBar>().SetUp(axie, axieHp);
         axieHealthBar.SetActive(true);
@@ -45,7 +44,6 @@ public class BattleUIController : MonoBehaviour
         {
             wonOrLose.text = "YOU HAVE BEEN DEFEATED !!!";
         }
-        returnHome.onClick.AddListener(ReturnHome);
     }
 
     public async void ReturnHome()
