@@ -6,6 +6,7 @@ const Collection = ({ marketplace, axICToken, account }) => {
   const [loading, setLoading] = useState(true)
   const [inputPrice, setInputPrice] = useState('')
   const [listAxies, setListAxies] = useState([])
+  
   const loadUserCollection = async () => {
     // Get all token account have  
     const tokens = await axICToken.getAllToken(account);
@@ -18,8 +19,9 @@ const Collection = ({ marketplace, axICToken, account }) => {
       // use uri to fetch the nft metadata stored on ipfs 
       const response = await fetch(uri);
       const metadata = await response.json();
-      // console.log(metadata.image);
+      console.log("metadata + "+metadata.image);
       let imgURI = "https://ipfs.io/ipfs/" + metadata.image.slice(7);
+      console.log("img URI : "+imgURI);
       //Define item
       const axie = {
         tokenId: a,
@@ -28,8 +30,11 @@ const Collection = ({ marketplace, axICToken, account }) => {
       }
       // Add item to items array
       tempAxies.push(axie);
-      console.log(axie.tokenId)
+      // console.log(axie.tokenId)
       setListAxies(...listAxies, tempAxies);
+      console.log(tempAxies.length);
+      tempAxies.forEach(axie => console.log(axie.tokenId)
+      )
       setLoading(false)
     });
   }
@@ -43,7 +48,10 @@ const Collection = ({ marketplace, axICToken, account }) => {
     SaleOnMarketplace(axie,inputPrice) 
   }
   const SaleOnMarketplace = async (axie, price) => {
-    await (await marketplace.makeItem(axie.tokenId, price)).wait()
+    var priceAxis = ethers.parseEther(price)
+    console.log("ethers.parseEther('0.000000000001') = "+ ethers.parseEther('0.000000000001'))
+    console.log("0.000000000001 = "+ priceAxis)
+    await (await marketplace.makeItem(axie.tokenId, priceAxis)).wait()
     loadUserCollection()
   }
     useEffect(() => {
