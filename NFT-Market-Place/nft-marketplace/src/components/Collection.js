@@ -4,6 +4,7 @@ import {ethers} from 'ethers'
 const {utils} = 'ethers';
 const Collection = ({ marketplace, axICToken, account }) => {
   const [loading, setLoading] = useState(true)
+  const [inputPrice, setInputPrice] = useState('')
   const [listAxies, setListAxies] = useState([])
   const loadUserCollection = async () => {
     // Get all token account have  
@@ -27,21 +28,26 @@ const Collection = ({ marketplace, axICToken, account }) => {
       }
       // Add item to items array
       tempAxies.push(axie);
+      console.log(axie.tokenId)
       setListAxies(...listAxies, tempAxies);
       setLoading(false)
     });
   }
+  const InputChange = (event) =>{
+    setInputPrice(event.target.value)
+  }
+  const clickEvent = (axie) =>{
+    console.log(inputPrice)
+    console.log(axie.tokenId)
+    console.log(axie.axieId)
+    SaleOnMarketplace(axie,inputPrice) 
+  }
   const SaleOnMarketplace = async (axie, price) => {
-    const ethPrice = utils.parseEther(price.toString())
-    await (await marketplace.makeItem(axie.tokenId, axie.axieId, ethPrice)).wait()
+    await (await marketplace.makeItem(axie.tokenId, price)).wait()
     loadUserCollection()
   }
     useEffect(() => {
-      if(loading) return(
-        <main style={{ padding: "1rem 0" }}>
-          <h2>Loading...</h2>
-        </main>
-      )
+      loadUserCollection()
     }, [])
     return (
       <div>
@@ -55,7 +61,12 @@ const Collection = ({ marketplace, axICToken, account }) => {
                     <Card.Img variant="top" src={item.image} />
                     <Card.Footer>PriceETH</Card.Footer>
                   </Card>
-                  <button onClick={() => SaleOnMarketplace(item)}>Sale</button>
+                  <input
+                    type='text'
+                    value={inputPrice}
+                    onChange={InputChange}
+                  />
+                  <button onClick= {() => clickEvent(item)}>Sale</button>
                 </Col>
               ))}
             </Row>
